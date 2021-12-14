@@ -8,8 +8,8 @@ class ListMovies {
       overview:
           'Em Infiltrado, um misterioso homem conhecido como Harry (Jason Statham) trabalha para uma empresa de carros-fortes e é responsável por transferir milhões de dólares em dinheiro todos os dias pela cidade de Los Angeles. ',
       posterPath: 'assets/images/movies/infiltrado-icone.jpg',
-      title: 'infiltrado',
-      voteAverage: 8.0,
+      title: 'Infiltrado',
+      voteAverage: 8.4,
     ),
     Movies(
       backdropPath: 'assets/images/movies/juntos-e-enrrolados-post.jpg',
@@ -69,8 +69,8 @@ class ListMovies {
       overview:
           'Em Infiltrado, um misterioso homem conhecido como Harry (Jason Statham) trabalha para uma empresa de carros-fortes e é responsável por transferir milhões de dólares em dinheiro todos os dias pela cidade de Los Angeles. ',
       posterPath: 'assets/images/movies/infiltrado-icone.jpg',
-      title: 'infiltrado',
-      voteAverage: 8.0,
+      title: 'Infiltrado',
+      voteAverage: 8.4,
     ),
     Movies(
         backdropPath: 'assets/images/movies/a-profissional-post.jpg',
