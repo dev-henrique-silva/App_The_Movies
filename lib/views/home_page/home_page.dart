@@ -41,11 +41,10 @@ class _HomePageState extends State<HomePage> {
     favorites = context.watch<MoviesFavorite>();
     return Scaffold(
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: 5,
-          crossAxisSpacing: 5,
-          childAspectRatio: 0.6,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 160,
+          mainAxisSpacing: 5.0,
+          childAspectRatio: 0.7,
         ),
         itemCount: moviesList.length,
         itemBuilder: (BuildContext context, int index) {
@@ -78,12 +77,12 @@ class _HomePageState extends State<HomePage> {
                     image: NetworkImage(ApiConsts.tmdbBaseImageUrl +
                         'w500/' +
                         '${moviesList[index].posterPath}'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                     placeholder: AssetImage('assets/images/loading.gif'),
                   ),
                   Positioned(
-                    top: 1,
-                    right: 1,
+                    top: 7,
+                    right: 7,
                     child: GestureDetector(
                       onTap: () {
                         selectedMovieFavorite.add(moviesList[index]);
@@ -102,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                               : Color.fromRGBO(0, 0, 0, 0.2),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(6.0),
+                          padding: const EdgeInsets.all(2.0),
                           child: Icon(
                             isFavorite
                                 ? Icons.favorite
