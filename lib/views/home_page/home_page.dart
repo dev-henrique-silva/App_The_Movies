@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_movie/consts/api_consts.dart';
+import 'package:the_movie/consts/api_endpoints.dart';
 import 'package:the_movie/controllers/movies.controller.dart';
 import 'package:the_movie/controllers/movies_favorite.controller.dart';
+import 'package:the_movie/models/genres_model.dart';
 import 'package:the_movie/models/movies_model.dart';
 import '../details_page/movie_details_page.dart';
 
@@ -13,12 +16,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final moviesList = ListMovies.movies;
+  List<Genres> _genres = [];
+  List<Movies> moviesList = [];
   late MoviesFavorite favorites;
   List<Movies> selectedMovieFavorite = [];
 
   @override
   void initState() {
+    fetchGenres().then((value) {
+      _genres = value.genres ?? [];
+    });
+
+    getPopularMovies(Endpoints.popularMoviesUrl(1)).then((value) {
+      setState(() {
+        moviesList = value;
+      });
+    });
+
     super.initState();
   }
 
@@ -31,11 +45,14 @@ class _HomePageState extends State<HomePage> {
           crossAxisCount: 3,
           mainAxisSpacing: 5,
           crossAxisSpacing: 5,
-          childAspectRatio: 0.7,
+          childAspectRatio: 0.6,
         ),
         itemCount: moviesList.length,
         itemBuilder: (BuildContext context, int index) {
-          bool isFavorite = favorites.listFavorites.contains(moviesList[index]);
+          bool isFavorite = Provider.of<MoviesFavorite>(context, listen: false)
+              .listFavorites
+              .contains(moviesList[index]);
+
           selectedMovieFavorite =
               Provider.of<MoviesFavorite>(context, listen: false)
                   .listFavorites
@@ -44,19 +61,23 @@ class _HomePageState extends State<HomePage> {
           return GestureDetector(
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MovieDetailsPage(
-                        movie: moviesList[index],
-                        heroId: '${moviesList[index].id}discover'),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetailsPage(
+                      movie: moviesList[index],
+                      genres: _genres,
+                      heroId: '${moviesList[index].id}discover'),
+                ),
+              );
             },
             child: Hero(
               tag: '${moviesList[index].id}discover',
               child: Stack(
                 children: [
                   FadeInImage(
-                    image: NetworkImage('${moviesList[index].posterPath}'),
+                    image: NetworkImage(ApiConsts.tmdbBaseImageUrl +
+                        'w500/' +
+                        '${moviesList[index].posterPath}'),
                     fit: BoxFit.cover,
                     placeholder: AssetImage('assets/images/loading.gif'),
                   ),

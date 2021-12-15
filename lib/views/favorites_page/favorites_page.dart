@@ -1,7 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:the_movie/consts/api_consts.dart';
+import 'package:the_movie/controllers/movies.controller.dart';
 import 'package:the_movie/controllers/movies_favorite.controller.dart';
+import 'package:the_movie/models/genres_model.dart';
 import 'package:the_movie/models/movies_model.dart';
 import 'package:provider/provider.dart';
 import 'package:the_movie/views/details_page/movie_details_page.dart';
@@ -14,10 +15,15 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
+  List<Genres> _genres = [];
   List<Movies>? moviesList;
 
   @override
   void initState() {
+    fetchGenres().then((value) {
+      _genres = value.genres ?? [];
+    });
+
     super.initState();
   }
 
@@ -52,6 +58,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           MaterialPageRoute(
                             builder: (context) => MovieDetailsPage(
                                 movie: favorites.listFavorites[index],
+                                genres: _genres,
                                 heroId:
                                     '${favorites.listFavorites[index].id}discover'),
                           ),
@@ -60,7 +67,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       child: ListTile(
                         leading: Hero(
                           tag: '${favorites.listFavorites[index].id}discover',
-                          child: Image.network(
+                          child: Image.network(ApiConsts.tmdbBaseImageUrl +
+                              'w500/' +
                               '${favorites.listFavorites[index].posterPath}'),
                         ),
                         title: Text(

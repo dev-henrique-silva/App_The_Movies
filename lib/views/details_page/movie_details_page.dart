@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:the_movie/consts/api_consts.dart';
+import 'package:the_movie/models/genres_model.dart';
 import 'package:the_movie/models/movies_model.dart';
+import 'package:the_movie/views/Widgets/button_genres/button_genres.dart';
 
 class MovieDetailsPage extends StatefulWidget {
   final Movies movie;
-  final String heroId;
 
-  MovieDetailsPage({
-    Key? key,
-    required this.movie,
-    required this.heroId,
-  }) : super(key: key);
+  final String heroId;
+  final List<Genres> genres;
+
+  MovieDetailsPage(
+      {Key? key,
+      required this.movie,
+      required this.heroId,
+      required this.genres})
+      : super(key: key);
 
   @override
   _MovieDetailsPageState createState() => _MovieDetailsPageState();
@@ -55,6 +61,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             ),
             titleMovie(),
             voteAverage(),
+            buildBottonGenres(),
             Text(
               "Resumo",
               textAlign: TextAlign.start,
@@ -70,7 +77,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
         width: double.infinity,
         height: imageDetailHeight,
         child: Image.network(
-          widget.movie.backdropPath!,
+          ApiConsts.tmdbBaseImageUrl + 'w500/' + widget.movie.backdropPath!,
           fit: BoxFit.cover,
         ),
       );
@@ -87,11 +94,13 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
               borderRadius: BorderRadius.circular(8.0),
               child: widget.movie.posterPath == null
                   ? Image.asset(
-                      'assets/images/loadImageDetails.jpg',
+                      'assets/images/loading.gif',
                       fit: BoxFit.cover,
                     )
                   : FadeInImage(
-                      image: NetworkImage(widget.movie.posterPath!),
+                      image: NetworkImage(ApiConsts.tmdbBaseImageUrl +
+                          'w500/' +
+                          widget.movie.posterPath!),
                       fit: BoxFit.cover,
                       placeholder: AssetImage('assets/images/loading.gif'),
                     ),
@@ -122,6 +131,25 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
               color: Colors.yellow,
             ),
           ],
+        ),
+      );
+
+  Widget buildBottonGenres() => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                widget.genres.isEmpty
+                    ? Container()
+                    : GenreList(
+                        genres: widget.movie.genreIds ?? [],
+                        totalGenres: widget.genres,
+                      ),
+              ],
+            ),
+          ),
         ),
       );
 
